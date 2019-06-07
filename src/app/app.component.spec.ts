@@ -14,7 +14,7 @@ describe('AppComponent', () => {
   let splashScreen;
 
   beforeEach(async(() => {
-    statusBar = jasmine.createSpyObj('StatusBar', ['styleDefault']);
+    statusBar = jasmine.createSpyObj('StatusBar', ['backgroundColorByHexString', 'styleLightContent']);
     splashScreen = jasmine.createSpyObj('SplashScreen', ['hide']);
 
     TestBed.configureTestingModule({
@@ -44,9 +44,9 @@ describe('AppComponent', () => {
     it('sets the default status bar style when ready', async () => {
       const platform = TestBed.get(Platform);
       TestBed.createComponent(AppComponent);
-      expect(statusBar.styleDefault).not.toHaveBeenCalled();
+      expect(statusBar.styleLightContent).not.toHaveBeenCalled();
       await platform.ready();
-      expect(statusBar.styleDefault).toHaveBeenCalledTimes(1);
+      expect(statusBar.styleLightContent).toHaveBeenCalledTimes(1);
     });
 
     it('hides the splash screen when ready', async () => {
@@ -55,6 +55,24 @@ describe('AppComponent', () => {
       expect(splashScreen.hide).not.toHaveBeenCalled();
       await platform.ready();
       expect(splashScreen.hide).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not set the status bar background by default', async () => {
+      const platform = TestBed.get(Platform);
+      TestBed.createComponent(AppComponent);
+      expect(statusBar.backgroundColorByHexString).not.toHaveBeenCalled();
+      await platform.ready();
+      expect(statusBar.backgroundColorByHexString).not.toHaveBeenCalled();
+    });
+
+    it('sets the status bar background for Android', async () => {
+      const platform = TestBed.get(Platform);
+      platform.is.withArgs('android').and.returnValue(true);
+      TestBed.createComponent(AppComponent);
+      expect(statusBar.backgroundColorByHexString).not.toHaveBeenCalled();
+      await platform.ready();
+      expect(statusBar.backgroundColorByHexString).toHaveBeenCalledTimes(1);
+      expect(statusBar.backgroundColorByHexString).toHaveBeenCalledWith('#074f8b');
     });
   });
 });
