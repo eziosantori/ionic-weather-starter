@@ -7,16 +7,26 @@ import { of } from 'rxjs';
 import { CurrentWeatherPage } from './current-weather.page';
 import { WeatherService } from '../services/weather/weather.service';
 import { createWeatherServiceMock } from '../services/weather/weather.service.mock';
+import { LoadingController } from '@ionic/angular';
+import { createOverlayControllerMock, createOverlayElementMock } from '../../../test/mocks';
 
 describe('CurrentWeatherPage', () => {
   let component: CurrentWeatherPage;
   let fixture: ComponentFixture<CurrentWeatherPage>;
+  let loading;
 
   beforeEach(async(() => {
+    loading = createOverlayElementMock('Loading');
     TestBed.configureTestingModule({
       declarations: [CurrentWeatherPage],
       imports: [IonicModule.forRoot()],
-      providers: [{ provide: WeatherService, useFactory: createWeatherServiceMock }],
+      providers: [
+        {
+          provide: LoadingController,
+          useFactory: () => createOverlayControllerMock('LoadingController', loading)
+        },
+        { provide: WeatherService, useFactory: createWeatherServiceMock }
+      ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
 
@@ -30,9 +40,16 @@ describe('CurrentWeatherPage', () => {
   });
 
   describe('entering the page', () => {
-    it('gets the current weather', () => {
+    it('displays a loading indicator', async () => {
+      const loadingController = TestBed.get(LoadingController);
+      await component.ionViewDidEnter();
+      expect(loadingController.create).toHaveBeenCalledTimes(1);
+      expect(loading.present).toHaveBeenCalledTimes(1);
+    });
+
+    it('gets the current weather', async () => {
       const weather = TestBed.get(WeatherService);
-      component.ionViewDidEnter();
+      await component.ionViewDidEnter();
       expect(weather.current).toHaveBeenCalledTimes(1);
     });
 
@@ -45,11 +62,24 @@ describe('CurrentWeatherPage', () => {
           date: new Date(1485789600 * 1000)
         })
       );
-      component.ionViewDidEnter();
+      await component.ionViewDidEnter();
       fixture.detectChanges();
       await new Promise(resolve => setTimeout(() => resolve()));
       const t = fixture.debugElement.query(By.css('kws-temperature'));
       expect(t).toBeTruthy();
+    });
+
+    it('dismisses the loading indicator', async () => {
+      const weather = TestBed.get(WeatherService);
+      weather.current.and.returnValue(
+        of({
+          temperature: 280.32,
+          condition: 300,
+          date: new Date(1485789600 * 1000)
+        })
+      );
+      await component.ionViewDidEnter();
+      expect(loading.dismiss).toHaveBeenCalledTimes(1);
     });
   });
 });
