@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { LoadingController } from '@ionic/angular';
+
 import { Forecast } from '../models/forecast';
 import { IconMapService } from '../services/icon-map/icon-map.service';
 import { WeatherService } from '../services/weather/weather.service';
@@ -11,9 +13,23 @@ import { WeatherService } from '../services/weather/weather.service';
 export class ForecastPage {
   forecast: Forecast;
 
-  constructor(public iconMap: IconMapService, private weather: WeatherService) {}
+  constructor(
+    public iconMap: IconMapService,
+    private loadingController: LoadingController,
+    private weather: WeatherService
+  ) {}
 
-  ionViewDidEnter() {
-    this.weather.forecast().subscribe(f => (this.forecast = f));
+  async ionViewDidEnter() {
+    const loading = await this.showLoading();
+    this.weather.forecast().subscribe(f => {
+      this.forecast = f;
+      loading.dismiss();
+    });
+  }
+
+  private async showLoading(): Promise<HTMLIonLoadingElement> {
+    const loading = await this.loadingController.create();
+    await loading.present();
+    return loading;
   }
 }
