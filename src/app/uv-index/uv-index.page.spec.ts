@@ -78,12 +78,6 @@ describe('UvIndexPage', () => {
       expect(el.nativeElement.textContent).toContain('Stay in the shade');
     });
 
-    it('gets the UV index', async () => {
-      const weather = TestBed.get(WeatherService);
-      await component.ionViewDidEnter();
-      expect(weather.uvIndex).toHaveBeenCalledTimes(1);
-    });
-
     it('dismisses the loading indicator', async () => {
       const weather = TestBed.get(WeatherService);
       weather.uvIndex.and.returnValue(
