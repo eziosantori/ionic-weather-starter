@@ -9,6 +9,8 @@ import { WeatherService } from '../services/weather/weather.service';
 import { createWeatherServiceMock } from '../services/weather/weather.service.mock';
 import { LoadingController } from '@ionic/angular';
 import { createOverlayControllerMock, createOverlayElementMock } from '../../../test/mocks';
+import { UserPreferencesService } from '../services/user-preferences/user-preferences.service';
+import { createUserPreferencesServiceMock } from '../services/user-preferences/user-preferences.service.mock';
 
 describe('UvIndexPage', () => {
   let component: UvIndexPage;
@@ -25,6 +27,7 @@ describe('UvIndexPage', () => {
           provide: LoadingController,
           useFactory: () => createOverlayControllerMock('LoadingController', loading)
         },
+        { provide: UserPreferencesService, useFactory: createUserPreferencesServiceMock },
         { provide: WeatherService, useFactory: createWeatherServiceMock }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -48,6 +51,15 @@ describe('UvIndexPage', () => {
           riskLevel: 1
         })
       );
+    });
+
+    [{ use: true, scale: 'C' }, { use: false, scale: 'F' }].forEach(test => {
+      it(`determines the scale ${test.scale}`, async () => {
+        const userPreferences = TestBed.get(UserPreferencesService);
+        userPreferences.getUseCelcius.and.returnValue(Promise.resolve(test.use));
+        await component.ionViewDidEnter();
+        expect(component.scale).toEqual(test.scale);
+      });
     });
 
     it('displays a loading indicator', async () => {
