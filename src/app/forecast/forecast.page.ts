@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
 
 import { Forecast } from '../models/forecast';
@@ -10,7 +10,8 @@ import { UserPreferencesService } from '../services/user-preferences/user-prefer
 @Component({
   selector: 'app-forecast',
   templateUrl: 'forecast.page.html',
-  styleUrls: ['forecast.page.scss']
+  styleUrls: ['forecast.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ForecastPage extends WeatherPageBase<Forecast> {
   constructor(

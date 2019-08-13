@@ -7,13 +7,15 @@
 </ion-header>
 
 <ion-content class="ion-text-center ion-padding">
-  <div class="information">
-    <kws-temperature
-      class="primary-value"
-      [scale]="scale"
-      temperature="{{ data?.temperature }}"
-      (click)="toggleScale()"
-    ></kws-temperature>
+  <div *ngIf="data$ | async as data">
+    <div class="information">
+      <kws-temperature
+        class="primary-value"
+        [scale]="scale"
+        temperature="{{ data.temperature }}"
+        (click)="toggleScale()"
+      ></kws-temperature>
+      <kws-condition [condition]="data.condition" [iconPaths]="iconMap"></kws-condition>
+    </div>
   </div>
-  <kws-condition [condition]="data?.condition" [iconPaths]="iconMap"></kws-condition>
 </ion-content>

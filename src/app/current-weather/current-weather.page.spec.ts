@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IonicModule } from '@ionic/angular';
 import { of } from 'rxjs';
@@ -44,28 +44,31 @@ describe('CurrentWeatherPage', () => {
 
   describe('entering the page', () => {
     [{ use: true, scale: 'C' }, { use: false, scale: 'F' }].forEach(test => {
-      it(`determines the scale ${test.scale}`, async () => {
+      it(`determines the scale ${test.scale}`, fakeAsync(() => {
         const userPreferences = TestBed.get(UserPreferencesService);
         userPreferences.getUseCelcius.and.returnValue(Promise.resolve(test.use));
-        await component.ionViewDidEnter();
+        component.ionViewDidEnter();
+        tick();
         expect(component.scale).toEqual(test.scale);
-      });
+      }));
     });
 
-    it('displays a loading indicator', async () => {
+    it('displays a loading indicator', fakeAsync(() => {
       const loadingController = TestBed.get(LoadingController);
-      await component.ionViewDidEnter();
+      component.ionViewDidEnter();
+      tick();
       expect(loadingController.create).toHaveBeenCalledTimes(1);
       expect(loading.present).toHaveBeenCalledTimes(1);
-    });
+    }));
 
-    it('gets the current weather', async () => {
+    it('gets the current weather', fakeAsync(() => {
       const weather = TestBed.get(WeatherService);
-      await component.ionViewDidEnter();
+      component.ionViewDidEnter();
+      tick();
       expect(weather.current).toHaveBeenCalledTimes(1);
-    });
+    }));
 
-    it('displays the current weather', async () => {
+    it('displays the current weather', fakeAsync(() => {
       const weather = TestBed.get(WeatherService);
       weather.current.and.returnValue(
         of({
@@ -74,14 +77,14 @@ describe('CurrentWeatherPage', () => {
           date: new Date(1485789600 * 1000)
         })
       );
-      await component.ionViewDidEnter();
+      component.ionViewDidEnter();
+      tick();
       fixture.detectChanges();
-      await new Promise(resolve => setTimeout(() => resolve()));
       const t = fixture.debugElement.query(By.css('kws-temperature'));
       expect(t).toBeTruthy();
-    });
+    }));
 
-    it('dismisses the loading indicator', async () => {
+    it('dismisses the loading indicator', fakeAsync(() => {
       const weather = TestBed.get(WeatherService);
       weather.current.and.returnValue(
         of({
@@ -90,9 +93,10 @@ describe('CurrentWeatherPage', () => {
           date: new Date(1485789600 * 1000)
         })
       );
-      await component.ionViewDidEnter();
+      component.ionViewDidEnter();
+      tick();
       expect(loading.dismiss).toHaveBeenCalledTimes(1);
-    });
+    }));
   });
 
   describe('toggling the scale', () => {
