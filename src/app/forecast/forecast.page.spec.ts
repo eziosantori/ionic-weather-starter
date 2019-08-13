@@ -1,5 +1,5 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IonicModule } from '@ionic/angular';
 import { of } from 'rxjs';
@@ -73,37 +73,42 @@ describe('ForecastPage', () => {
     });
 
     [{ use: true, scale: 'C' }, { use: false, scale: 'F' }].forEach(test => {
-      it(`determines the scale ${test.scale}`, async () => {
+      it(`determines the scale ${test.scale}`, fakeAsync(() => {
         const userPreferences = TestBed.get(UserPreferencesService);
         userPreferences.getUseCelcius.and.returnValue(Promise.resolve(test.use));
-        await component.ionViewDidEnter();
+        component.ionViewDidEnter();
+        tick();
         expect(component.scale).toEqual(test.scale);
-      });
+      }));
     });
 
-    it('displays a loading indicator', async () => {
+    it('displays a loading indicator', fakeAsync(() => {
       const loadingController = TestBed.get(LoadingController);
-      await component.ionViewDidEnter();
+      component.ionViewDidEnter();
+      tick();
       expect(loadingController.create).toHaveBeenCalledTimes(1);
       expect(loading.present).toHaveBeenCalledTimes(1);
-    });
+    }));
 
-    it('gets the forecast', async () => {
+    it('gets the forecast', fakeAsync(() => {
       const weather = TestBed.get(WeatherService);
-      await component.ionViewDidEnter();
+      component.ionViewDidEnter();
+      tick();
       expect(weather.forecast).toHaveBeenCalledTimes(1);
-    });
+    }));
 
-    it('shows the forecast items', async () => {
-      await component.ionViewDidEnter();
+    it('shows the forecast items', fakeAsync(() => {
+      component.ionViewDidEnter();
+      tick();
       fixture.detectChanges();
       const f = fixture.debugElement.queryAll(By.css('kws-daily-forecast'));
       expect(f.length).toEqual(3);
-    });
+    }));
 
-    it('dismisses the loading indicator', async () => {
-      await component.ionViewDidEnter();
+    it('dismisses the loading indicator', fakeAsync(() => {
+      component.ionViewDidEnter();
+      tick();
       expect(loading.dismiss).toHaveBeenCalledTimes(1);
-    });
+    }));
   });
 });

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
 
 import { UVIndex } from '../models/uv-index';
@@ -9,7 +9,8 @@ import { UserPreferencesService } from '../services/user-preferences/user-prefer
 @Component({
   selector: 'app-uv-index',
   templateUrl: 'uv-index.page.html',
-  styleUrls: ['uv-index.page.scss']
+  styleUrls: ['uv-index.page.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UvIndexPage extends WeatherPageBase<UVIndex> {
   advice: Array<string> = [
