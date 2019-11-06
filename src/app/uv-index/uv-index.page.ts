@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
 
 import { UVIndex } from '../models/uv-index';
-import { WeatherService } from '../services/weather/weather.service';
+// import { WeatherService } from '../services/weather/weather.service';
+import { WeatherService } from '@app/services';
 import { WeatherPageBase } from '../weather-page-base/weather-page-base';
 import { UserPreferencesService } from '../services/user-preferences/user-preferences.service';
 

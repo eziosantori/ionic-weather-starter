@@ -21,7 +21,7 @@ describe('ForecastPage', () => {
     loading = createOverlayElementMock('Loading');
     TestBed.configureTestingModule({
       declarations: [ForecastPage],
-      imports: [IonicModule.forRoot()],
+      imports: [IonicModule],
       providers: [
         {
           provide: LoadingController,
@@ -45,7 +45,7 @@ describe('ForecastPage', () => {
   describe('entering the page', () => {
     beforeEach(() => {
       const weather = TestBed.get(WeatherService);
-      weather.forecast.and.returnValue(
+      weather.forecast.mockReturnValue(
         of([
           [
             {
@@ -75,7 +75,7 @@ describe('ForecastPage', () => {
     [{ use: true, scale: 'C' }, { use: false, scale: 'F' }].forEach(test => {
       it(`determines the scale ${test.scale}`, fakeAsync(() => {
         const userPreferences = TestBed.get(UserPreferencesService);
-        userPreferences.getUseCelcius.and.returnValue(Promise.resolve(test.use));
+        userPreferences.getUseCelcius.mockReturnValue(Promise.resolve(test.use));
         component.ionViewDidEnter();
         tick();
         expect(component.scale).toEqual(test.scale);

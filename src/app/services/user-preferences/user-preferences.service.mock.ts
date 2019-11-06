@@ -1,6 +1,6 @@
 export function createUserPreferencesServiceMock() {
-  return jasmine.createSpyObj('UserPreferencesService', {
-    getUseCelcius: Promise.resolve(),
-    setUseCelcius: Promise.resolve()
-  });
+  return {
+    getUseCelcius: jest.fn(() => Promise.resolve()),
+    setUseCelcius: jest.fn(() => Promise.resolve())
+  };
 }

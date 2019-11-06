@@ -1,5 +1,5 @@
 export function createLocationServiceMock() {
-  return jasmine.createSpyObj('LocationService', {
-    current: Promise.resolve()
-  });
+  return {
+    current: jest.fn(() => Promise.resolve())
+  };
 }

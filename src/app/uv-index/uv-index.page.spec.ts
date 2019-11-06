@@ -21,7 +21,7 @@ describe('UvIndexPage', () => {
     loading = createOverlayElementMock('Loading');
     TestBed.configureTestingModule({
       declarations: [UvIndexPage],
-      imports: [IonicModule.forRoot()],
+      imports: [IonicModule],
       providers: [
         {
           provide: LoadingController,
@@ -45,7 +45,7 @@ describe('UvIndexPage', () => {
   describe('entering the page', () => {
     beforeEach(() => {
       const weather = TestBed.get(WeatherService);
-      weather.uvIndex.and.returnValue(
+      weather.uvIndex.mockReturnValue(
         of({
           value: 3.5,
           riskLevel: 1
@@ -56,7 +56,7 @@ describe('UvIndexPage', () => {
     [{ use: true, scale: 'C' }, { use: false, scale: 'F' }].forEach(test => {
       it(`determines the scale ${test.scale}`, fakeAsync(() => {
         const userPreferences = TestBed.get(UserPreferencesService);
-        userPreferences.getUseCelcius.and.returnValue(Promise.resolve(test.use));
+        userPreferences.getUseCelcius.mockReturnValue(Promise.resolve(test.use));
         component.ionViewDidEnter();
         tick();
         expect(component.scale).toEqual(test.scale);
@@ -96,7 +96,7 @@ describe('UvIndexPage', () => {
 
     it('dismisses the loading indicator', fakeAsync(() => {
       const weather = TestBed.get(WeatherService);
-      weather.uvIndex.and.returnValue(
+      weather.uvIndex.mockReturnValue(
         of({
           value: 3.5,
           riskLevel: 1

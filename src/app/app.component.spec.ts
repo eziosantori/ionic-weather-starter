@@ -14,8 +14,11 @@ describe('AppComponent', () => {
   let splashScreen;
 
   beforeEach(async(() => {
-    statusBar = jasmine.createSpyObj('StatusBar', ['backgroundColorByHexString', 'styleLightContent']);
-    splashScreen = jasmine.createSpyObj('SplashScreen', ['hide']);
+    splashScreen = {hide: jest.fn()};
+    statusBar = {
+      backgroundColorByHexString: jest.fn(),
+      styleLightContent: jest.fn()
+    };
 
     TestBed.configureTestingModule({
       declarations: [AppComponent],
@@ -67,10 +70,12 @@ describe('AppComponent', () => {
 
     it('sets the status bar background for Android', async () => {
       const platform = TestBed.get(Platform);
-      platform.is.withArgs('android').and.returnValue(true);
+      platform.is.mockReturnValue(true);
       TestBed.createComponent(AppComponent);
       expect(statusBar.backgroundColorByHexString).not.toHaveBeenCalled();
       await platform.ready();
+      expect(platform.is).toHaveBeenCalledTimes(1);
+      expect(platform.is).toHaveBeenCalledWith('android');
       expect(statusBar.backgroundColorByHexString).toHaveBeenCalledTimes(1);
       expect(statusBar.backgroundColorByHexString).toHaveBeenCalledWith('#074f8b');
     });

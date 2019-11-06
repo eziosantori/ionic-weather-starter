@@ -34,14 +34,14 @@ describe('UserPreferencesService', () => {
     it('resolves the useCelcius value', async () => {
       const service: UserPreferencesService = TestBed.get(UserPreferencesService);
       const storage = TestBed.get(Storage);
-      storage.get.withArgs('useCelcius').and.returnValue(Promise.resolve(true));
+      storage.get.mockReturnValue(Promise.resolve(true));
       expect(await service.getUseCelcius()).toEqual(true);
     });
 
     it('caches the resolved useCelcius value', async () => {
       const service: UserPreferencesService = TestBed.get(UserPreferencesService);
       const storage = TestBed.get(Storage);
-      storage.get.withArgs('useCelcius').and.returnValue(Promise.resolve(true));
+      storage.get.mockReturnValue(Promise.resolve(true));
       expect(await service.getUseCelcius()).toEqual(true);
       expect(await service.getUseCelcius()).toEqual(true);
       expect(await service.getUseCelcius()).toEqual(true);
@@ -76,9 +76,9 @@ describe('UserPreferencesService', () => {
 });
 
 function createIonicStorageMock() {
-  return jasmine.createSpyObj('Storage', {
-    get: Promise.resolve(),
-    set: Promise.resolve(),
-    ready: Promise.resolve()
-  });
+  return {
+    get: jest.fn(() => Promise.resolve()),
+    set: jest.fn(() => Promise.resolve()),
+    ready: jest.fn(() => Promise.resolve())
+  };
 }

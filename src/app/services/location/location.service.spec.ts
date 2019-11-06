@@ -9,12 +9,15 @@ describe('LocationService', () => {
       providers: [
         {
           provide: Geolocation,
-          useFactory: () =>
-            jasmine.createSpyObj('Geolocation', {
-              getCurrentPosition: Promise.resolve({
-                coords: { latitude: 42, longitude: 73 }
-              })
-            })
+          useFactory: () => {
+            return {
+              getCurrentPosition: jest.fn(() =>
+                Promise.resolve({
+                  coords: { latitude: 42, longitude: 73 }
+                })
+              )
+            };
+          }
         }
       ]
     })

@@ -19,7 +19,7 @@ describe('WeatherService', () => {
     });
     httpTestingController = TestBed.get(HttpTestingController);
     const loc = TestBed.get(LocationService);
-    loc.current.and.returnValue(
+    loc.current.mockReturnValue(
       Promise.resolve({ latitude: 42.731338, longitude: -88.314159 })
     );
   });
