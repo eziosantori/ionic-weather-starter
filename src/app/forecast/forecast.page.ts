@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Forecast } from '../models/forecast';
 import { IconMapService } from '../services/icon-map/icon-map.service';
 import { WeatherService } from '../services/weather/weather.service';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-forecast',
@@ -36,10 +37,17 @@ export class ForecastPage {
 
   constructor(
     public iconMap: IconMapService,
+    private loadingController: LoadingController,
     private weather: WeatherService
     ) {}
 
-  ionViewDidEnter() {
-    this.weather.forecast().subscribe(f => (this.forecast = f));
+    async ionViewDidEnter() {
+      // this.weather.forecast().subscribe(f => (this.forecast = f));
+      const l = await this.loadingController.create();
+      l.present();
+      this.weather.forecast().subscribe(d => {
+        this.forecast = d;
+        l.dismiss();
+      });
   }
 }
