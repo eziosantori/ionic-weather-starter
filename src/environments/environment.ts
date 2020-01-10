@@ -2,8 +2,15 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+// CUPRA
+  // private latitude = 43.021818;
+  // private longitude = 13.857440;
 export const environment = {
-  production: false
+  production: false,
+  baseLat: 43.587155,
+  baseLon: 13.528086,
+  baseUrl: 'https://api.openweathermap.org/data/2.5',
+  appId: '1a9e7b4a6df2adfcc3b48aec42614c2e'
 };
 
 /*

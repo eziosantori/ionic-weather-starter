@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { IconMapService } from '../services/icon-map/icon-map.service';
+import { WeatherService } from '../services/weather/weather.service';
 import { Weather } from '../models/weather';
 
 @Component({
@@ -14,5 +15,8 @@ export class CurrentWeatherPage {
     condition: 200
   };
 
-  constructor(public iconMap: IconMapService) { }
+  constructor(
+    public iconMap: IconMapService,
+    private weather: WeatherService
+    ) { }
 }
