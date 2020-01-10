@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 import { Forecast } from '../models/forecast';
 import { IconMapService } from '../services/icon-map/icon-map.service';
+import { WeatherService } from '../services/weather/weather.service';
 
 @Component({
   selector: 'app-forecast',
@@ -33,5 +34,12 @@ export class ForecastPage {
     ]
   ];
 
-  constructor(public iconMap: IconMapService) {}
+  constructor(
+    public iconMap: IconMapService,
+    private weather: WeatherService
+    ) {}
+
+  ionViewDidEnter() {
+    this.weather.forecast().subscribe(f => (this.forecast = f));
+  }
 }

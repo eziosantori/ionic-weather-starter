@@ -7,7 +7,6 @@ import {
 import { environment } from '../../../environments/environment';
 import { WeatherService } from './weather.service';
 import { Weather } from 'src/app/models/weather';
-import { Forecast } from '../../models/forecast';
 import { UVIndex } from 'src/app/models/uv-index';
 
 const lat = 43.587155;
