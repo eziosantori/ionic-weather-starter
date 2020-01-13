@@ -3,6 +3,6 @@
 </ion-header>
 
 <ion-content class="ion-text-center ion-padding">
-  <kws-uv-index class="primary-value" [uvIndex]="uvIndex?.value"></kws-uv-index>
-  <div class="description">{{ advice[(uvIndex?.riskLevel)] }}</div>
+  <kws-uv-index class="primary-value" [uvIndex]="data?.value"></kws-uv-index>
+  <div class="description">{{ advice[(data?.riskLevel)] }}</div>
 </ion-content>

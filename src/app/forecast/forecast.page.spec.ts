@@ -51,7 +51,7 @@ describe('ForecastPage', () => {
       expect(weather.forecast).toHaveBeenCalledTimes(1);
     });
 
-    it('shows the forecast items', () => {
+    it('shows the forecast items', async () => {
       const weather = TestBed.get(WeatherService);
       weather.forecast.and.returnValue(
         of([
@@ -78,7 +78,7 @@ describe('ForecastPage', () => {
           ]
         ])
       );
-      component.ionViewDidEnter();
+      await component.ionViewDidEnter();
       fixture.detectChanges();
       const f = fixture.debugElement.queryAll(By.css('kws-daily-forecast'));
       expect(f.length).toEqual(3);

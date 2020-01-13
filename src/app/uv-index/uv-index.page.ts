@@ -3,14 +3,15 @@ import { Component } from '@angular/core';
 import { UVIndex } from '../models/uv-index';
 import { WeatherService } from '../services/weather/weather.service';
 import { LoadingController } from '@ionic/angular';
+import { WeatherPageBase } from '../weather-page-base/weather-page-base';
 
 @Component({
   selector: 'app-uv-index',
   templateUrl: 'uv-index.page.html',
   styleUrls: ['uv-index.page.scss']
 })
-export class UvIndexPage {
-  uvIndex: UVIndex;
+export class UvIndexPage extends WeatherPageBase<UVIndex> {
+  // uvIndex: UVIndex;
 
   advice: Array<string> = [
     'Wear sunglasses on bright days. If you burn easily, cover up and use broad spectrum SPF 30+ sunscreen. ' +
@@ -30,16 +31,8 @@ export class UvIndexPage {
   ];
 
   constructor(
-    private loadingController: LoadingController,
-    private weather: WeatherService) {}
-
-  async ionViewDidEnter() {
-    // this.weather.uvi().subscribe(u => (this.uvIndex = u));
-    const l = await this.loadingController.create();
-    l.present();
-    this.weather.uvi().subscribe(d => {
-      this.uvIndex = d;
-      l.dismiss();
-    });
-  }
+    loadingController: LoadingController,
+    weather: WeatherService) {
+      super(loadingController, () => weather.uvi())
+    }
 }

@@ -12,7 +12,7 @@
 
 <ion-content class="ion-padding">
   <ion-list>
-    <ion-item *ngFor="let f of forecast">
+    <ion-item *ngFor="let f of data">
       <kws-daily-forecast scale="F" [forecasts]="f" [iconPaths]="iconMap"></kws-daily-forecast>
     </ion-item>
   </ion-list>
