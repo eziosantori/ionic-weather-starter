@@ -33,6 +33,6 @@ export class UvIndexPage extends WeatherPageBase<UVIndex> {
   constructor(
     loadingController: LoadingController,
     weather: WeatherService) {
-      super(loadingController, () => weather.uvi())
+      super(loadingController, () => weather.uvi());
     }
 }
