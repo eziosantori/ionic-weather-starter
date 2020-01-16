@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, from } from 'rxjs';
+import { map, flatMap } from 'rxjs/operators';
 
 import { environment } from 'src/environments/environment';
 import { Weather } from 'src/app/models/weather';
 import { Forecast } from '../../models/forecast';
 import { UVIndex } from 'src/app/models/uv-index';
+  import { LocationService } from '../location/location.service';
+import { Coordinate } from 'src/app/models/cordinate';
 
 
 @Injectable({
@@ -20,34 +22,50 @@ export class WeatherService {
   // private latitude = 43.021818;
   // private longitude = 13.857440;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private location: LocationService) {}
+
   public current(): Observable<Weather> {
+    return this.currentLocation().pipe(flatMap(coords => this.getCurrent(coords)));
+  }
+  public forecast(): Observable<Forecast> {
+    return this.currentLocation().pipe(flatMap(coords => this.getForecast(coords)));
+  }
+
+  public uvi(): Observable<UVIndex> {
+    return this.currentLocation().pipe(flatMap(coords => this.getUvi(coords)));
+  }
+  private getCurrent(coords: Coordinate): Observable<Weather> {
     return this.http
     .get(
-      `${environment.baseUrl}/weather?lat=${this.latitude}&lon=${
-        this.longitude
+      `${environment.baseUrl}/weather?lat=${coords.latitude}&lon=${
+        coords.longitude
       }&appid=${environment.appId}`
     )
     .pipe(map(res => this.unpackWeather(res)));
   }
-  public forecast(): Observable<Forecast> {
+  private getForecast(coords: Coordinate): Observable<Forecast> {
     return this.http
     .get(
-      `${environment.baseUrl}/forecast?lat=${this.latitude}&lon=${
-        this.longitude
-      }&appid=${environment.appId}`)
+      `${environment.baseUrl}/forecast?lat=${coords.latitude}&lon=${
+        coords.longitude
+      }&appid=${environment.appId}`
+    )
     .pipe(map(res => this.unpackForecast(res)));
   }
-
-  public uvi(): Observable<UVIndex> {
+  private getUvi(coords: Coordinate): Observable<UVIndex> {
     return this.http
     .get(
-      `${environment.baseUrl}/uvi?lat=${this.latitude}&lon=${
-        this.longitude
-      }&appid=${environment.appId}`)
-      .pipe(map(res => this.unpackUvIndex(res)));
+      `${environment.baseUrl}/uvi?lat=${coords.latitude}&lon=${
+        coords.longitude
+      }&appid=${environment.appId}`
+    )
+    .pipe(map(res => this.unpackUvIndex(res)));
   }
-
+  private currentLocation(): Observable<Coordinate> {
+    return from( this.location.current());
+  }
   private unpackWeather(res: any): Weather {
     return {
       temperature: res.main.temp,
