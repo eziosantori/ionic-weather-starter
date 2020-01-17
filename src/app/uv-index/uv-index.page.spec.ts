@@ -8,6 +8,8 @@ import { UvIndexPage } from './uv-index.page';
 import { WeatherService } from '../services/weather/weather.service';
 import { createWeatherServiceMock } from '../services/weather/weather.service.mock';
 import { createOverlayControllerMock, createOverlayElementMock } from 'test/mocks';
+import { UserPreferencesService } from '../services/user-preferences/user-preferences.service';
+import { createUserPreferencesServiceMock } from '../services/user-preferences/user-preferences.service.mock';
 
 
 describe('UvIndexPage', () => {
@@ -23,6 +25,7 @@ describe('UvIndexPage', () => {
       imports: [IonicModule.forRoot()],
       providers: [
         { provide: WeatherService, useFactory: createWeatherServiceMock },
+        { provide: UserPreferencesService, useFactory: createUserPreferencesServiceMock },
         { provide: LoadingController, useFactory: () =>
           createOverlayControllerMock('LoadingController', loading)
         }

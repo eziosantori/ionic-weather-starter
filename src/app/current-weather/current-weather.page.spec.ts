@@ -8,6 +8,8 @@ import { CurrentWeatherPage } from './current-weather.page';
 import { WeatherService } from '../services/weather/weather.service';
 import { createWeatherServiceMock } from '../services/weather/weather.service.mock';
 import { createOverlayControllerMock, createOverlayElementMock } from 'test/mocks';
+import { UserPreferencesService } from '../services/user-preferences/user-preferences.service';
+import { createUserPreferencesServiceMock } from '../services/user-preferences/user-preferences.service.mock';
 
 describe('CurrentWeatherPage', () => {
   let component: CurrentWeatherPage;
@@ -21,6 +23,7 @@ describe('CurrentWeatherPage', () => {
       imports: [IonicModule.forRoot()],
       providers: [
         { provide: WeatherService, useFactory: createWeatherServiceMock },
+        { provide: UserPreferencesService, useFactory: createUserPreferencesServiceMock },
         { provide: LoadingController, useFactory: () =>
           createOverlayControllerMock('LoadingController', loading)
         }
@@ -81,5 +84,35 @@ describe('CurrentWeatherPage', () => {
     });
   });
 
+
+  describe('toggling the scale', () => {
+    it('toggles from "C" to "F"', () => {
+      component.scale = 'C';
+      component.toggleScale();
+      expect(component.scale).toEqual('F');
+    });
+
+    it('sets the preference false when toggling from "C" to "F"', () => {
+      const userPreferences = TestBed.get(UserPreferencesService);
+      component.scale = 'C';
+      component.toggleScale();
+      expect(userPreferences.setUseCelcius).toHaveBeenCalledTimes(1);
+      expect(userPreferences.setUseCelcius).toHaveBeenCalledWith(false);
+    });
+
+    it('toggles from "F" to "C"', () => {
+      component.scale = 'F';
+      component.toggleScale();
+      expect(component.scale).toEqual('C');
+    });
+
+    it('sets the preference true when toggling from "F" to "C"', () => {
+      const userPreferences = TestBed.get(UserPreferencesService);
+      component.scale = 'F';
+      component.toggleScale();
+      expect(userPreferences.setUseCelcius).toHaveBeenCalledTimes(1);
+      expect(userPreferences.setUseCelcius).toHaveBeenCalledWith(true);
+    });
+  });
 
 });

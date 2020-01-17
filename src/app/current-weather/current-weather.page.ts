@@ -5,6 +5,7 @@ import { WeatherPageBase } from '../weather-page-base/weather-page-base';
 import { IconMapService } from '../services/icon-map/icon-map.service';
 import { WeatherService } from '../services/weather/weather.service';
 import { Weather } from '../models/weather';
+import { UserPreferencesService } from '../services/user-preferences/user-preferences.service';
 
 
 @Component({
@@ -18,11 +19,19 @@ export class CurrentWeatherPage extends WeatherPageBase<Weather> {
   constructor(
     public iconMap: IconMapService,
     loadingController: LoadingController,
+    userPreferences: UserPreferencesService,
     weather: WeatherService
     ) {
-      super(loadingController, () => weather.current());
+      super(
+        loadingController
+        , userPreferences
+        , () => weather.current()
+      );
     }
-
+    toggleScale() {
+      this.scale = this.scale === 'C' ? 'F' : 'C';
+      this.userPreferences.setUseCelcius(this.scale === 'C');
+    }
     // async ionViewDidEnter() {
     //   // this.weather.current().subscribe(w => (this.currentWeather = w));
     //   const l = await this.loadingController.create();

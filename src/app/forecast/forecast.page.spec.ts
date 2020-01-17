@@ -8,6 +8,8 @@ import { ForecastPage } from './forecast.page';
 import { WeatherService } from '../services/weather/weather.service';
 import { createWeatherServiceMock } from '../services/weather/weather.service.mock';
 import { createOverlayControllerMock, createOverlayElementMock } from 'test/mocks';
+import { UserPreferencesService } from '../services/user-preferences/user-preferences.service';
+import { createUserPreferencesServiceMock } from '../services/user-preferences/user-preferences.service.mock';
 
 describe('ForecastPage', () => {
   let component: ForecastPage;
@@ -21,6 +23,7 @@ describe('ForecastPage', () => {
       imports: [IonicModule.forRoot()],
       providers: [
         { provide: WeatherService, useFactory: createWeatherServiceMock },
+        { provide: UserPreferencesService, useFactory: createUserPreferencesServiceMock },
         { provide: LoadingController, useFactory: () =>
           createOverlayControllerMock('LoadingController', loading)
         }
